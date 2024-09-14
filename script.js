@@ -3,6 +3,7 @@
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
+  clicks = 0;
 
   constructor(coords, distance, duration) {
     this.coords = coords; // [lat, lng]
@@ -17,6 +18,10 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
+  }
+
+  click() {
+    this.clicks++;
   }
 }
 
@@ -275,6 +280,9 @@ class App {
         duration: 1,
       },
     });
+
+    workout.click();
+    // console.log(workout);
   }
 
   _setLocalStorage() {
@@ -289,6 +297,9 @@ class App {
 
     this.#workouts.forEach(work => {
       this._renderWorkout(work);
+
+      work.__proto__ =
+        work.type === 'running' ? Running.prototype : Cycling.prototype; // rebuild prototype chain
     });
   }
 
