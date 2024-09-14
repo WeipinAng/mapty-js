@@ -73,8 +73,12 @@ class App {
   #mapEvent;
   #workouts = [];
 
+  // executed as soon as app is created
   constructor() {
-    this._getPosition(); // executed as soon as app is created
+    this._getPosition();
+
+    this._getLocalStorage();
+
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
@@ -279,6 +283,17 @@ class App {
   _setLocalStorage() {
     // localStorage is a store of key-value pairs (convert object to string using JSON.stringify())
     localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem('workouts')); // convert string back to object
+    if (!data) return;
+    this.#workouts = data; // restore 'workouts' array
+
+    this.#workouts.forEach(work => {
+      this._renderWorkout(work);
+      //   this._renderWorkoutMarker(work);
+    });
   }
 }
 
